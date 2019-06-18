@@ -35,7 +35,6 @@ class _MyAppState extends State<MyApp> {
 
     setState(() {
       _platformVersion = platformVersion;
-      FlutterSharePlugin.share("textContent");
     });
   }
 
@@ -47,7 +46,17 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: Column(
+            children: <Widget>[
+              Text('Running on: $_platformVersion\n'),
+              RaisedButton(
+                child: Text("Share"),
+                onPressed: () {
+                  FlutterSharePlugin.share("textContent From Button Press");
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

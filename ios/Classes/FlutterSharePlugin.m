@@ -13,35 +13,73 @@
   if ([@"getPlatformVersion" isEqualToString:call.method]) {
     result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
   } else if ([@"share" isEqualToString:call.method]) {
+      // [self share:call];
 
-    NSDictionary *arguments = [call arguments];
-    NSString *textContent = arguments[@"content"];
-    NSString *fileUrl = arguments[@"fileUrl"];
+      NSDictionary *arguments = [call arguments];
+      NSString *textContent = arguments[@"content"];
+      
+      if (textContent.length == 0) {
+          result([FlutterError errorWithCode:@"error" message:@"FlutterSharePlugin: Non-empty text content expected" details:nil]);
+          return;
+      
+      }
+      NSArray *items;
+      items = @[textContent];
+      
+      // NSString *fileUrl = arguments[@"fileUrl"];
+      // NSData *fileData = [NSData dataWithContentsOfFile:fileUrl];
+      // if(fileData != nil){
+      //   items = @[fileData];
+      // }else {
+      //   items = @[textContent];
+      // }
 
-    if (textContent.length == 0) {
-      result([FlutterError errorWithCode:@"error" message:@"FlutterSharePlugin: Non-empty text content expected" details:nil]);
-      return;
-    }
-    NSData *fileData = [NSData dataWithContentsOfFile:fileUrl];
-    NSArray *activityItems = [NSArray arrayWithObjects: fileData, nil];
-    UIActivityViewController *activityController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
-    [activityController setValue: title, forKeyPath: "subject"];
+      NSNumber *originX = arguments[@"originX"];
+      NSNumber *originY = arguments[@"originY"];
+      NSNumber *originWidth = arguments[@"originWidth"];
+      NSNumber *originHeight = arguments[@"originHeight"];
 
-    //if iPhone
-    if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone) {
-        [self presentViewController:activityController animated:YES completion:nil];
-    }
-    //if iPad
-    else {
-        // Change Rect to position Popover
-        UIPopoverController *popup = [[UIPopoverController alloc] initWithContentViewController:activityController];
-        [popup presentPopoverFromRect:CGRectMake(self.view.frame.size.width/2, self.view.frame.size.height/4, 0, 0)inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-    }
-    
-    result(YES);
+      CGRect originRect;
+      if (originX != nil && originY != nil && originWidth != nil && originHeight != nil) {
+        originRect = CGRectMake([originX doubleValue], [originY doubleValue], 
+                                  [originWidth doubleValue], [originHeight doubleValue]);
+      }
+
+
+      [self share:items
+          withController:[UIApplication sharedApplication].keyWindow.rootViewController
+          atSource:originRect];
+      // // build a view controller
+      // UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
+
+      // UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
+      // controller.popoverPresentationController.sourceView = viewController.view;
+      
+      // if (!CGRectIsEmpty(originRect)) {
+      //     controller.popoverPresentationController.sourceRect = originRect;
+      // }
+
+      // // and present it
+      // [viewController presentViewController:controller animated:YES completion:nil];
+      // return YES;
+      result(@"share successful!!");
   } else {
     result(FlutterMethodNotImplemented);
   }
 }
 
++ (void)share:(id)sharedItems
+    withController:(UIViewController *)controller
+          atSource:(CGRect)origin {
+  UIActivityViewController *activityViewController =
+      [[UIActivityViewController alloc] initWithActivityItems:sharedItems
+                                        applicationActivities:nil];
+  activityViewController.popoverPresentationController.sourceView = controller.view;
+  if (!CGRectIsEmpty(origin)) {
+    activityViewController.popoverPresentationController.sourceRect = origin;
+  }
+  [controller presentViewController:activityViewController animated:YES completion:nil];
+}
+
 @end
+

@@ -32,27 +32,28 @@ public class FlutterSharePlugin implements MethodCallHandler {
         } else if (call.method.equals("share")) {
             boolean status = false;
             String content = call.argument("content");
-            //String message = call.argument("message");
+            // String message = call.argument("message");
             String fileUrl = call.argument("fileUrl");
 
             try {
-				Uri fileUri = Uri.parse(fileUrl);
 
                 Intent intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setType("*/*");
-                
+
                 if (fileUrl != null && fileUrl != "") {
-					intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-					intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-				} else {
-					Log.println(Log.INFO, "", "FlutterShare: ShareLocalFile Warning: fileUrl null or empty");
-                    //return;
+                    Uri fileUri = Uri.parse(fileUrl);
+                    intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                } else {
+                    Log.println(Log.INFO, "", "FlutterShare: ShareLocalFile Warning: fileUrl null or empty");
+                    // return;
                     intent.putExtra(Intent.EXTRA_SUBJECT, String.copyValueOf(content.toCharArray()));
-                    content = "Share with";
-				}
+                    intent.putExtra(Intent.EXTRA_TEXT, String.copyValueOf(content.toCharArray()));
+                    content = "Share with...";
+                }
 
                 Intent chooserIntent = Intent.createChooser(intent, content);
                 chooserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -60,7 +61,7 @@ public class FlutterSharePlugin implements MethodCallHandler {
                 mRegistrar.context().startActivity(chooserIntent);
                 status = true;
             } catch (Exception ex) {
-                Log.println(Log.INFO, "", "FlutterSharePlugin: Error");
+                Log.println(Log.INFO, "", "FlutterSharePlugin : Android: Error: " + ex);
             }
             result.success(status);
         } else {
