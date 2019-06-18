@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class FlutterSharePlugin {
   static const MethodChannel _channel =
-      const MethodChannel('flutter_share_plugin');
+  const MethodChannel('flutter_share_plugin');
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -12,11 +12,12 @@ class FlutterSharePlugin {
   }
 
   static Future<bool> share(String textContent, {String fileUrl}) async {
-    final bool sucess = await _channel.invokeMethod('share', <String, dynamic>{
+    print("calling the share method");
+    final bool success = await _channel.invokeMethod('share', <String, dynamic>{
       'content': textContent,
       'fileUrl': fileUrl,
     });
 
-    return sucess;
+    return success;
   }
 }

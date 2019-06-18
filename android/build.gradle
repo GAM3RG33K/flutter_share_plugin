@@ -1,4 +1,4 @@
-group 'com.example.flutter_share_plugin'
+group 'com.happyworks.flutter_share_plugin'
 version '1.0-SNAPSHOT'
 
 buildscript {

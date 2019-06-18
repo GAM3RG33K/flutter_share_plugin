@@ -36,20 +36,23 @@ public class FlutterSharePlugin implements MethodCallHandler {
             String fileUrl = call.argument("fileUrl");
 
             try {
-                if (fileUrl == null || fileUrl == "") {
-                    Log.println(Log.INFO, "", "FlutterShare: ShareLocalFile Warning: fileUrl null or empty");
-                    return;
-                }
-
-                Uri fileUri = Uri.parse(fileUrl);
+				Uri fileUri = Uri.parse(fileUrl);
 
                 Intent intent = new Intent();
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setType("*/*");
-                intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                
+                if (fileUrl != null && fileUrl != "") {
+					intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+					intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+				} else {
+					Log.println(Log.INFO, "", "FlutterShare: ShareLocalFile Warning: fileUrl null or empty");
+                    //return;
+                    intent.putExtra(Intent.EXTRA_SUBJECT, String.copyValueOf(content.toCharArray()));
+                    content = "Share with";
+				}
 
                 Intent chooserIntent = Intent.createChooser(intent, content);
                 chooserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
