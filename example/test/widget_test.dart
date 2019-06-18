@@ -6,6 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_share_plugin/flutter_share_plugin.dart';
 import 'package:flutter_share_plugin_example/my_app.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -13,12 +14,14 @@ void main() {
   testWidgets('Verify Platform version', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
-
+    String platformVersion = await FlutterSharePlugin.platformVersion;
     // Verify that platform version is retrieved.
     expect(
       find.byWidgetPredicate(
-        (Widget widget) => widget is Text &&
-                           widget.data.startsWith('Running on:'),
+        (Widget widget) =>
+            widget is Text &&
+            widget.data.startsWith('Running on:') &&
+            widget.data.contains(platformVersion),
       ),
       findsOneWidget,
     );

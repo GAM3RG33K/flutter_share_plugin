@@ -24,15 +24,15 @@
       
       }
       NSArray *items;
-      items = @[textContent];
+      // items = @[textContent];
       
-      // NSString *fileUrl = arguments[@"fileUrl"];
-      // NSData *fileData = [NSData dataWithContentsOfFile:fileUrl];
-      // if(fileData != nil){
-      //   items = @[fileData];
-      // }else {
-      //   items = @[textContent];
-      // }
+      NSString *fileUrl = arguments[@"fileUrl"];
+      NSData *fileData = [NSData dataWithContentsOfFile:fileUrl];
+      if(fileData){
+        items = @[fileData];
+      }else {
+        items = @[textContent];
+      }
 
       NSNumber *originX = arguments[@"originX"];
       NSNumber *originY = arguments[@"originY"];
@@ -49,19 +49,7 @@
       [self share:items
           withController:[UIApplication sharedApplication].keyWindow.rootViewController
           atSource:originRect];
-      // // build a view controller
-      // UIViewController *viewController = [UIApplication sharedApplication].keyWindow.rootViewController;
-
-      // UIActivityViewController *controller = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
-      // controller.popoverPresentationController.sourceView = viewController.view;
-      
-      // if (!CGRectIsEmpty(originRect)) {
-      //     controller.popoverPresentationController.sourceRect = originRect;
-      // }
-
-      // // and present it
-      // [viewController presentViewController:controller animated:YES completion:nil];
-      // return YES;
+          
       result(@"share successful!!");
   } else {
     result(FlutterMethodNotImplemented);
