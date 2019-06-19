@@ -23,7 +23,7 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await FlutterSharePlugin.platformVersion;
+      platformVersion = await FlutterShare.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -52,7 +52,8 @@ class _MyAppState extends State<MyApp> {
               RaisedButton(
                 child: Text("Share"),
                 onPressed: () {
-                  FlutterSharePlugin.share("textContent From Button Press");
+                  FlutterShare.share(
+                      textContent: "textContent From Button Press");
                 },
               ),
             ],

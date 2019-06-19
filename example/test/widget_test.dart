@@ -14,7 +14,7 @@ void main() {
   testWidgets('Verify Platform version', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(MyApp());
-    String platformVersion = await FlutterSharePlugin.platformVersion;
+    String platformVersion = await FlutterShare.platformVersion;
     // Verify that platform version is retrieved.
     expect(
       find.byWidgetPredicate(
