@@ -3,6 +3,9 @@ package com.happyworks.flutter_share_plugin;
 import java.lang.reflect.Field;
 
 import android.content.Intent;
+import android.content.Context;
+import android.content.ContentResolver;
+import android.webkit.MimeTypeMap;
 import android.net.Uri;
 import android.util.Log;
 
@@ -17,18 +20,21 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  */
 public class FlutterSharePlugin implements MethodCallHandler {
     private static Registrar mRegistrar;
+    private static Context mContext;
 
     /**
      * Plugin registration.
      */
     public static void registerWith(Registrar registrar) {
         mRegistrar = registrar;
+        mContext = mRegistrar.context();
         final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_share_plugin");
         channel.setMethodCallHandler(new FlutterSharePlugin());
     }
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
+
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android " + android.os.Build.VERSION.RELEASE);
         } else if (call.method.equals("share")) {
@@ -54,15 +60,6 @@ public class FlutterSharePlugin implements MethodCallHandler {
                 intent.setAction(Intent.ACTION_SEND);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                // set share type as all (*)
-                intent.setType("*/*");
-
-                // check file url and fetch file
-                if (fileUrl != null && !fileUrl.isEmpty()) {
-                    Uri fileUri = Uri.parse(fileUrl);
-                    intent.putExtra(Intent.EXTRA_STREAM, fileUri);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                }
 
                 // check text content status and set it as TEXT or SUBJECT accordingly
                 if (content != null && !content.isEmpty()) {
@@ -73,6 +70,19 @@ public class FlutterSharePlugin implements MethodCallHandler {
                         intent.putExtra(Intent.EXTRA_SUBJECT, String.copyValueOf(content.toCharArray()));
                     }
                     intent.putExtra(Intent.EXTRA_TEXT, String.copyValueOf(content.toCharArray()));
+                    // set Share type as text
+                    intent.setType("text/*");
+                }
+
+                // check file url and fetch file
+                if (fileUrl != null && !fileUrl.isEmpty()) {
+                    fileUrl = "file://" + fileUrl;
+                    Uri fileUri = Uri.parse(fileUrl);
+                    Log.println(Log.INFO, "FlutterShare", "file uri--> " + fileUrl);
+                    intent.putExtra(Intent.EXTRA_STREAM, fileUri);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    // set share type as mime type of the file
+                    intent.setType(getMimeType(fileUri));
                 }
 
                 // set content as title of the share dialog
@@ -82,7 +92,7 @@ public class FlutterSharePlugin implements MethodCallHandler {
                 Intent chooserIntent = Intent.createChooser(intent, content);
                 chooserIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 chooserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                mRegistrar.context().startActivity(chooserIntent);
+                mContext.startActivity(chooserIntent);
 
                 // notify that the process of sharing is successful
                 // NOTE: this plugin can only provide functionality upto showing share UI
@@ -95,5 +105,17 @@ public class FlutterSharePlugin implements MethodCallHandler {
         } else {
             result.notImplemented();
         }
+    }
+
+    private String getMimeType(Uri uri) {
+        String mimeType = null;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            ContentResolver cr = mContext.getContentResolver();
+            mimeType = cr.getType(uri);
+        } else {
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension.toLowerCase());
+        }
+        return mimeType;
     }
 }
