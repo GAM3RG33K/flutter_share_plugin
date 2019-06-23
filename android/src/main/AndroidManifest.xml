@@ -1,3 +1,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.happyworks.flutter_share_plugin">
+    package="com.happyworks.flutter_share_plugin">
+
+    <application>
+        <provider
+            android:name="com.happyworks.flutter_share_plugin.FlutterShareFilePathProvider"
+            android:authorities="${applicationId}"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/flutter_path_provider" />
+        </provider>
+    </application>
 </manifest>

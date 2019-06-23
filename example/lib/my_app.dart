@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_share_plugin/flutter_share_plugin.dart';
 
+import 'utils/general_utils.dart';
+
 class MyApp extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
@@ -11,6 +13,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  static GlobalKey widgetKey = GlobalKey();
 
   @override
   void initState() {
@@ -40,23 +43,25 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Column(
-            children: <Widget>[
-              Text('Running on: $_platformVersion\n'),
-              RaisedButton(
-                child: Text("Share"),
-                onPressed: () {
-                  FlutterShare.share(
-                      textContent: "textContent From Button Press");
-                },
-              ),
-            ],
+    return RepaintBoundary(
+      key: widgetKey,
+      child: MaterialApp(
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Plugin example app'),
+          ),
+          body: Center(
+            child: Column(
+              children: <Widget>[
+                Text('Running on: $_platformVersion\n'),
+                RaisedButton(
+                  child: Text("Share"),
+                  onPressed: () async {
+                    await GeneralUtils.takeScreenshot(widgetKey);
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
