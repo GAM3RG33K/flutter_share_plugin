@@ -64,12 +64,7 @@ class GeneralUtils {
         //get timestamp to make sure that every screenshot file is unique
         var timeStamp = DateTime.now().millisecondsSinceEpoch;
 
-        //for test  use download folder
-        final directory =
-            await StorageHelper.getDirectory(AppDirectory.AppDownload);
-        // final directory = await StorageHelper.getDirectory(AppDirectory.Screenshot);
-
-        //create screenshot file name uysnig timestamp value
+        //create screenshot file name using timestamp value
         String fileName = "screenshot_$timeStamp.png";
         share("screenshot at : ${DateTime.now()}",
             fileName: fileName, bytes: pngBytes);
