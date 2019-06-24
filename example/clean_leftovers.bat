@@ -1,7 +1,7 @@
 @echo off
 setlocal
 echo cleaning iOS left over build files...
-set "directories=.\ios\Flutter\App.framework\ .\ios\Flutter\Flutter.framework\"
+set "directories=.\ios\Flutter\App.framework\ .\ios\Flutter\Flutter.framework\ .\ios\.symlinks .\ios\Frameworks"
 set "files=.\ios\Flutter\Generated.xcconfig .\ios\Flutter\app.flx .\ios\ServiceDefinitions.json"
 echo cleaning directories...
 (
