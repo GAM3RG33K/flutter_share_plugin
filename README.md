@@ -18,7 +18,7 @@ String filePath = "../song.mp3";
 FlutterShare.shareFile(filePath);
 ```
 
-### Share file and text content: (text will be used only in case shared with email or chat app and will be set as body text )
+### Share file and text content:
 ```dart
 String filePath = "../screenshot_123.jpg";
 FlutterShare.shareFileWithText(textContent: "Screenshot attached", filePath: filePath);
