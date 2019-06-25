@@ -35,3 +35,5 @@
 *.lock
 android/gradlew.bat
 android/gradle/wrapper/gradle-wrapper.jar
+clean_leftovers.bat
+export_project.bat
