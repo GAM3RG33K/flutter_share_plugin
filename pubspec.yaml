@@ -1,6 +1,6 @@
 name: flutter_share_plugin
-description: A new flutter plugin project.
-version: 0.0.2
+description: Flutter plugin for sharing any files and text to other apps. 
+version: 0.0.3
 author: 'Harshvardhan Joshi <hj2931996@gmail.com>'
 homepage: 'https://github.com/GAM3RG33K/flutter_share_plugin'
 

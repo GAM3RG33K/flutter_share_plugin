@@ -59,7 +59,9 @@ class FlutterShare {
   /// parameter
   ///
   ///Under the hood this method uses
-  ///```dart share(textContent, fileName, bytes); ```
+  ///```dart
+  ///share(textContent, fileName, bytes);
+  ///```
   static Future<bool> shareFileWithText(
       {String textContent, String filePath = ""}) async {
     if (textContent == null) {
@@ -79,7 +81,9 @@ class FlutterShare {
   ///Method implementation for sharing only text,
   ///
   ///Under the hood this method uses
-  ///```dart shareFileWithText(textContent, filePath); ```
+  ///```dart
+  ///shareFileWithText(textContent, filePath);
+  ///```
   ///
   static Future<bool> shareText(String textContent) async {
     return shareFileWithText(textContent: textContent, filePath: null);
@@ -90,7 +94,9 @@ class FlutterShare {
   ///
   ///
   ///Under the hood this method uses
-  ///```dart shareFileWithText(textContent, filePath); ```
+  ///```dart
+  ///shareFileWithText(textContent, filePath);
+  ///```
   ///
   static Future<bool> shareFile(String filePath) async {
     return shareFileWithText(textContent: null, filePath: filePath);
