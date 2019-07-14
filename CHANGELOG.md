@@ -1,3 +1,7 @@
+## 0.1.0
+* updated plugin's code according to plugin release guidelines
+* no changes in funcitonality
+
 ## 0.0.3
 * updated plugin's documentation
 
