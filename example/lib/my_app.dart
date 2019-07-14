@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  shareFile(String fileName, String filePath) {
+  void shareFile(String fileName, String filePath) {
     getFileBytes(filePath).then((bytes) async {
       var text = "sharing file: $fileName";
       NotificationHelper.showToast(text, false);
@@ -84,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
-  showChooser() async {
+  void showChooser() async {
     var task = () {
       getFileFromChooser().then((filePath) {
         setState(() {
@@ -96,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
     PermissionManager.performTaskWithPermission(AppPermission.Storage, task);
   }
 
-  shareText(String text) {
+  void shareText(String text) {
     var textContent = "sharing text: $text";
 
     FlutterShare.shareText(text).then((text) {
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  chooseAndShare() {
+  void chooseAndShare() {
     var task = () {
       getFileFromChooser().then((filePath) {
         setState(() {

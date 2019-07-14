@@ -62,7 +62,7 @@ class PermissionManager {
 
   /// This method is used to check the app permission
   ///   based on [permissionEnum] which is of AppPermission type.
-  Future<bool> hasPermission(permissionEnum) async {
+  Future<bool> hasPermission(AppPermission permissionEnum) async {
     //get Permission Group from the AppPermission value
     PermissionGroup permission = getPermissionGroupFromEnum(permissionEnum);
 
@@ -79,7 +79,7 @@ class PermissionManager {
 
   /// This method will request a single permission requested by [permissionEnum]
   /// parameter
-  requestPermission(AppPermission permissionEnum) async {
+  void requestPermission(AppPermission permissionEnum) async {
     //get Permission Group from the AppPermission value
     PermissionGroup permission = getPermissionGroupFromEnum(permissionEnum);
 
@@ -92,7 +92,7 @@ class PermissionManager {
   /// This method will request mulitple permissions mentioned in the
   /// [permissionsEnum] list
   ///
-  requestPermissions(List<AppPermission> permissionsEnum) async {
+  void requestPermissions(List<AppPermission> permissionsEnum) async {
     //get a list of PermissionGroup from the enum values in the list
     var permissionList = permissionsEnum.map<PermissionGroup>((enumValue) {
       return getPermissionGroupFromEnum(enumValue);
@@ -104,13 +104,13 @@ class PermissionManager {
 
   /// This method is used request permissions form the platform.
   /// Also, this method is the base method of any publically accessible methods of this class
-  _requestMultiplePermissions(List<PermissionGroup> permissionList) async {
+  void _requestMultiplePermissions(List<PermissionGroup> permissionList) async {
     try {
       //This map holds both Group of permission and it's status for this app
       Map<PermissionGroup, PermissionStatus> permissions =
           await _permissionHandler
               .requestPermissions(permissionList)
-              .catchError((error) {
+              .catchError((Exception error) {
         print("exception while requesting permission: $error");
       });
 
@@ -148,7 +148,7 @@ class PermissionManager {
   ///
   /// This approch can be improved or modified based on the requirement of the app or feature.
   ///
-  static performTaskWithPermission(
+  static void performTaskWithPermission(
       AppPermission permission, Function task) async {
     var manager = PermissionManager();
     var status = await manager.hasPermission(permission);
@@ -168,7 +168,7 @@ class PermissionManager {
 ///
 /// This is done to separate the PermissionGroup dependency from the app, in case future updates
 /// of this library changes/modifies any of the PermissionGroups.
-getPermissionGroupFromEnum(AppPermission permissionEnum) {
+PermissionGroup getPermissionGroupFromEnum(AppPermission permissionEnum) {
   switch (permissionEnum) {
     case AppPermission.Storage:
       return PermissionGroup.storage;
@@ -185,5 +185,7 @@ getPermissionGroupFromEnum(AppPermission permissionEnum) {
     case AppPermission.SMS:
       return PermissionGroup.sms;
       break;
+    default:
+      return null;
   }
 }

@@ -42,7 +42,7 @@ class FlutterShare {
       return false;
     }
 
-    if (fileName.isNotEmpty && bytes != null && bytes.length > 0) {
+    if (fileName.isNotEmpty && bytes != null && bytes.isNotEmpty) {
       final tempDir = await getTemporaryDirectory();
       final file = await new File('${tempDir.path}/$fileName').create();
       await file.writeAsBytes(bytes);
@@ -69,7 +69,7 @@ class FlutterShare {
     }
 
     String fileName;
-    var bytes;
+    List<int> bytes;
     if (filePath != null && filePath.isNotEmpty) {
       fileName = _getFileNameFromPath(filePath);
       bytes = await _getFileBytes(filePath);
