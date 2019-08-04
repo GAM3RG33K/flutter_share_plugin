@@ -8,6 +8,8 @@ import 'package:path_provider/path_provider.dart';
 ///
 /// This is a utility class, so all the methods here are static only.
 /// All the dependencies are passed as the parameters in the.
+///
+/// Author: Harshvardhan Joshi <hj2931996@gmail.com>
 class FlutterShare {
   static const MethodChannel _channel =
       const MethodChannel('flutter_share_plugin');
@@ -20,7 +22,7 @@ class FlutterShare {
   /// This method will call the respective OS's method implementation through method channel
   /// provided by flutter
   ///
-  /// There are all the parameters are kept optional right now, to provide customizaed method
+  /// All the parameters are kept optional right now, to provide customized method
   /// implementations.
   ///
   /// For Sharing text or link [textContent] is content is used, while for sharing a file [fileName] and [bytes]
