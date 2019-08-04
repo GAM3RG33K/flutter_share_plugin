@@ -2,7 +2,8 @@
 This plugin helps sharing content like, text, image or a file to other apps.
 It supports both Android and iOS, no additional changes are required in native code or projects (Except ofcourse the Storage Access permissions, you'll need to add that in your project manually).
 
-## Getting Started:
+[Complete Source Code for plugin](https://github.com/GAM3RG33K/flutter_share_plugin/)
+
 
 ### Install plugin:
 Visit [Pub Packages page for flutter share plugin](https://pub.dev/packages/flutter_share_plugin#-installing-tab-)

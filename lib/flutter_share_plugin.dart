@@ -8,6 +8,8 @@ import 'package:path_provider/path_provider.dart';
 ///
 /// This is a utility class, so all the methods here are static only.
 /// All the dependencies are passed as the parameters in the.
+/// 
+/// Author: Harshvardhan Joshi <hj2931996@gmail.com>
 class FlutterShare {
   static const MethodChannel _channel =
       const MethodChannel('flutter_share_plugin');
