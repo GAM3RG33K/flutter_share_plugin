@@ -11,8 +11,7 @@ import 'package:path_provider/path_provider.dart';
 ///
 /// Author: Harshvardhan Joshi <hj2931996@gmail.com>
 class FlutterShare {
-  static const MethodChannel _channel =
-      const MethodChannel('flutter_share_plugin');
+  static const MethodChannel _channel = MethodChannel('flutter_share_plugin');
 
   static Future<String> get platformVersion async {
     final String version = await _channel.invokeMethod('getPlatformVersion');
@@ -46,7 +45,7 @@ class FlutterShare {
 
     if (fileName.isNotEmpty && bytes != null && bytes.isNotEmpty) {
       final tempDir = await getTemporaryDirectory();
-      final file = await new File('${tempDir.path}/$fileName').create();
+      final file = await File('${tempDir.path}/$fileName').create();
       await file.writeAsBytes(bytes);
       print("file size: ${await file.length()} bytes");
     }
