@@ -28,7 +28,8 @@
             
         }
         //create an array of items to share
-        NSArray *items;
+        NSMutableArray *items= [NSMutableArray new];
+        [items addObject:[NSDecimalNumber numberWithInt:number]];
         
         //check if the file url is not empty
         if(!IsEmpty(fileUrl)){
@@ -37,12 +38,12 @@
             //check if the file is not null or empty
             if(fileData){
                 //add the file in the items
-                items = @[fileData];
+                [items addObject:fileData];
             }
         } else{
             //if the fileUrl is null means text is to be shared
             //add fetched content in the items
-            items = @[textContent];
+            [items addObject:textContent];
         }
         
         //the below values are used for showing a popup in the area inside rectangle
