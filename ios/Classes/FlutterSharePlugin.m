@@ -18,7 +18,7 @@
         //get parameters from the call
         NSDictionary *arguments = [call arguments];
         //extract text content
-        NSString *textContent = arguments[@"content"];
+        NSString *textContent = arguments[@"message"];
         NSString *fileUrl = arguments[@"fileUrl"];
         
         //check text content and file url, they should not be empty or null
@@ -28,21 +28,25 @@
             
         }
         //create an array of items to share
-        NSArray *items;
+        NSMutableArray *items = [NSMutableArray new];
         
         //check if the file url is not empty
         if(!IsEmpty(fileUrl)){
+            NSLog(@"FlutterSharePlugin FilePath: %@", fileUrl);
             //get the file from the url
             NSData *fileData = [NSData dataWithContentsOfFile:fileUrl];
+
             //check if the file is not null or empty
             if(fileData){
                 //add the file in the items
-                items = @[fileData];
+                [items addObject:fileData];
             }
-        } else{
+        } 
+        
+        if(!IsEmpty(textContent)){
             //if the fileUrl is null means text is to be shared
             //add fetched content in the items
-            items = @[textContent];
+            [items addObject:textContent];
         }
         
         //the below values are used for showing a popup in the area inside rectangle
@@ -58,7 +62,8 @@
                                     [originWidth doubleValue], [originHeight doubleValue]);
         }
         
-        
+        NSLog(@"Sharing file: %@ text: %@", fileUrl, textContent);
+
         //call share method with items, a UI View controller and rectangle area
         [FlutterSharePlugin share:items
                    withController:[UIApplication sharedApplication].keyWindow.rootViewController

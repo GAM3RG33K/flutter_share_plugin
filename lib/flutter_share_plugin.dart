@@ -9,6 +9,8 @@ import 'package:path_provider/path_provider.dart';
 /// This is a utility class, so all the methods here are static only.
 /// All the dependencies are passed as the parameters in the.
 ///
+/// Refer to : https://codinglatte.com/posts/flutter/handling-requesting-for-permissions-like-a-pro-in-flutter/
+///
 /// Author: Harshvardhan Joshi <hj2931996@gmail.com>
 class FlutterShare {
   static const MethodChannel _channel = MethodChannel('flutter_share_plugin');
@@ -24,36 +26,26 @@ class FlutterShare {
   /// All the parameters are kept optional right now, to provide customized method
   /// implementations.
   ///
-  /// For Sharing text or link [textContent] is content is used, while for sharing a file [fileName] and [bytes]
+  /// For Sharing text or link [message] is content is used, while for sharing a file [fileName] and [bytes]
   /// are used.
   ///
   /// Any of the above parameter can be null at any time.
   /// NOTE: this plugin can only provide functionality upto showing share UI
   /// Anything after Showing the UI is upto the respective OS to handle.
-  static Future<bool> share(
-      {String textContent = "Remove or Replace with your text",
-      String fileName,
-      List<int> bytes}) async {
-    if (fileName == null) {
-      fileName = "";
-    }
-    if (textContent.isEmpty && fileName.isEmpty) {
-      print(
-          "FlutterShare: share(textContent, fileName, bytes) method requires at least one Non-empty parameter.");
-      return false;
-    }
+  static Future<bool> share({String message = "",
+    String filePath}) async {
+    assert(
+    message != null && message.isNotEmpty ||
+        (filePath != null && filePath.isNotEmpty),
+    'FlutterShare: share(textContent, fileName, bytes) method requires at least one Non-empty parameter.');
 
-    if (fileName.isNotEmpty && bytes != null && bytes.isNotEmpty) {
-      final tempDir = await getTemporaryDirectory();
-      final file = await File('${tempDir.path}/$fileName').create();
-      await file.writeAsBytes(bytes);
-      print("file size: ${await file.length()} bytes");
-    }
-    final bool success = await _channel.invokeMethod('share', <String, dynamic>{
-      'content': textContent,
-      'fileName': fileName,
+    final String response =
+    await _channel.invokeMethod<String>('share', <String, dynamic>{
+      'message': message,
+      'fileUrl': filePath,
     });
-    return success;
+    print('Fluttershare: response: $response');
+    return true;
   }
 
   /// Method implementation for sharing file with a [textContent], file is accessed via [filePath] given as
@@ -63,20 +55,28 @@ class FlutterShare {
   ///```dart
   ///share(textContent, fileName, bytes);
   ///```
-  static Future<bool> shareFileWithText(
-      {String textContent, String filePath = ""}) async {
+  static Future<bool> shareFileWithText({String textContent,
+    String fileName,
+    List<int> bytes,
+    String filePath}) async {
+
     if (textContent == null) {
       textContent = "";
     }
 
-    String fileName;
-    List<int> bytes;
-    if (filePath != null && filePath.isNotEmpty) {
-      fileName = _getFileNameFromPath(filePath);
-      bytes = await _getFileBytes(filePath);
+    if ((filePath == null || filePath.isEmpty) &&
+        (fileName != null &&
+            fileName.isNotEmpty &&
+            bytes != null &&
+            bytes.isNotEmpty)) {
+      final tempDir = await getTemporaryDirectory();
+      filePath = '${tempDir.path}/$fileName';
+      final file = await File(filePath).create();
+      await file.writeAsBytes(bytes);
     }
 
-    return share(textContent: textContent, fileName: fileName, bytes: bytes);
+    assert(filePath.isNotEmpty, 'Could Not find file!!');
+    return share(message: textContent, filePath: filePath);
   }
 
   ///Method implementation for sharing only text,
@@ -107,7 +107,7 @@ class FlutterShare {
   /// After fetching the files,
   ///   then file will be converted to list of byte
   ///
-  /// list of bytes is returnes.
+  /// list of bytes is returned
   static Future<List<int>> _getFileBytes(String filePath) async {
     var file = File.fromUri(Uri.parse(filePath));
     var fileBytes = await file.readAsBytes();

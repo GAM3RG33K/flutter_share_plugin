@@ -37,3 +37,4 @@ android/gradlew.bat
 android/gradle/wrapper/gradle-wrapper.jar
 clean_leftovers.bat
 export_project.bat
+example/ios/Flutter/flutter_export_environment.sh
