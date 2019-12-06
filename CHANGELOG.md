@@ -1,3 +1,7 @@
+## 0.1.3+1
+* iOS file share bug-fix
+* improved example app
+
 ## 0.1.2
 * minor changes
 

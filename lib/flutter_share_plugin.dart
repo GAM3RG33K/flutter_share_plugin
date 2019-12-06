@@ -32,8 +32,7 @@ class FlutterShare {
   /// Any of the above parameter can be null at any time.
   /// NOTE: this plugin can only provide functionality upto showing share UI
   /// Anything after Showing the UI is upto the respective OS to handle.
-  static Future<bool> share({String message = "",
-    String filePath}) async {
+  static Future<bool> share({String message = "", String filePath}) async {
     assert(
     message != null && message.isNotEmpty ||
         (filePath != null && filePath.isNotEmpty),
@@ -59,7 +58,6 @@ class FlutterShare {
     String fileName,
     List<int> bytes,
     String filePath}) async {
-
     if (textContent == null) {
       textContent = "";
     }
@@ -103,21 +101,21 @@ class FlutterShare {
     return shareFileWithText(textContent: null, filePath: filePath);
   }
 
-  /// This method will get a file using the given [filePaht].
-  /// After fetching the files,
-  ///   then file will be converted to list of byte
-  ///
-  /// list of bytes is returned
-  static Future<List<int>> _getFileBytes(String filePath) async {
-    var file = File.fromUri(Uri.parse(filePath));
-    var fileBytes = await file.readAsBytes();
-    return fileBytes;
-  }
-
-  /// This method will get fileName from the given [filePaht].
-  /// name of the file is returned.
-  static String _getFileNameFromPath(String filePath) {
-    int fileNameStartIndex = filePath.lastIndexOf("/") + 1;
-    return filePath.substring(fileNameStartIndex, filePath.length);
-  }
+//  /// This method will get a file using the given [filePaht].
+//  /// After fetching the files,
+//  ///   then file will be converted to list of byte
+//  ///
+//  /// list of bytes is returned
+//  static Future<List<int>> _getFileBytes(String filePath) async {
+//    var file = File.fromUri(Uri.parse(filePath));
+//    var fileBytes = await file.readAsBytes();
+//    return fileBytes;
+//  }
+//
+//  /// This method will get fileName from the given [filePaht].
+//  /// name of the file is returned.
+//  static String _getFileNameFromPath(String filePath) {
+//    int fileNameStartIndex = filePath.lastIndexOf("/") + 1;
+//    return filePath.substring(fileNameStartIndex, filePath.length);
+//  }
 }

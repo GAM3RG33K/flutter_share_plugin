@@ -21,14 +21,15 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  * FlutterSharePlugin
  */
 public class FlutterSharePlugin implements MethodCallHandler {
-//    private final static String FILE_PROVIDER_NAME = "FlutterShareFilePathProvider";
+    //    private final static String FILE_PROVIDER_NAME = "FlutterShareFilePathProvider";
     private Registrar mRegistrar;
     private Context mContext;
 
-    private FlutterSharePlugin(Registrar registrar){
+    private FlutterSharePlugin(Registrar registrar) {
         this.mRegistrar = registrar;
         this.mContext = mRegistrar.context();
     }
+
     /**
      * Plugin registration.
      */
