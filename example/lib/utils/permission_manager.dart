@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:permission_handler/permission_handler.dart';
 
 import 'notification_helper.dart';
@@ -51,7 +53,7 @@ enum AppPermission {
 /// Date: 13-06-2019
 ///
 class PermissionManager {
-  static final PermissionManager _instance = new PermissionManager._internal();
+  static final PermissionManager _instance = PermissionManager._internal();
   static final _permissionHandler = PermissionHandler();
 
   factory PermissionManager() {
@@ -108,9 +110,9 @@ class PermissionManager {
     try {
       //This map holds both Group of permission and it's status for this app
       Map<PermissionGroup, PermissionStatus> permissions =
-          await _permissionHandler
-              .requestPermissions(permissionList)
-              .catchError((Exception error) {
+      await _permissionHandler
+          .requestPermissions(permissionList)
+          .catchError((Exception error) {
         print("exception while requesting permission: $error");
       });
 
@@ -148,8 +150,8 @@ class PermissionManager {
   ///
   /// This approch can be improved or modified based on the requirement of the app or feature.
   ///
-  static void performTaskWithPermission(
-      AppPermission permission, Function task) async {
+  static void performTaskWithPermission(AppPermission permission,
+      Function task) async {
     var manager = PermissionManager();
     var status = await manager.hasPermission(permission);
     if (!status) {
@@ -171,20 +173,24 @@ class PermissionManager {
 PermissionGroup getPermissionGroupFromEnum(AppPermission permissionEnum) {
   switch (permissionEnum) {
     case AppPermission.Storage:
-      return PermissionGroup.storage;
-      break;
+      return Platform.isAndroid
+          ? PermissionGroup.storage
+          : PermissionGroup.photos;
+
     case AppPermission.Contacts:
       return PermissionGroup.contacts;
-      break;
+
     case AppPermission.Phone:
       return PermissionGroup.phone;
-      break;
+
     case AppPermission.Camera:
-      return PermissionGroup.camera;
-      break;
+      return Platform.isAndroid
+          ? PermissionGroup.camera
+          : PermissionGroup.photos;
+
     case AppPermission.SMS:
       return PermissionGroup.sms;
-      break;
+
     default:
       return null;
   }

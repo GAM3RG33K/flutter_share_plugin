@@ -41,5 +41,67 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NFCReaderUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSBluetoothPeripheralUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSCalendarsUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSCameraUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSContactsUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSHealthShareUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSHealthUpdateUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSHomeKitUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSLocationUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSMotionUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSRemindersUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSSiriUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSVideoSubscriberAccountUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Example: You should fill this in</string>
+
+    <key>NSFaceIDUsageDescription</key>
+    <string>Example: You should fill this in</string>
 </dict>
 </plist>
