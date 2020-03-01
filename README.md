@@ -1,28 +1,23 @@
 # flutter_share_plugin
-Easily share content like text, image or a file to other apps.
-
-Both Android and iOS platforms are supported, no additional changes are required in native code or projects.
-
-*Except, the **Specific permissions** (like Storage Access permission), you'll need to add that in your project manually.*
-
 [![pub package](https://img.shields.io/pub/v/flutter_share_plugin.svg)](https://pub.dev/packages/flutter_share_plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
+
+Easily share content like text, image or any file to other apps.
+
+Both Android and iOS platforms are supported, no additional changes are required in native code or projects.
+*Except, the **Specific permissions** (like Storage Access permission), you'll need to add that in your project manually.*
+
+
 ### Install plugin:
-Visit [Pub Packages page for flutter share plugin](https://pub.dev/packages/flutter_share_plugin#-installing-tab-)
+Visit https://pub.dev/packages/flutter_share_plugin#-installing-tab-
 
 ### Import library:
 ```dart
 import 'package:flutter_share_plugin/flutter_share_plugin.dart';
 ```
-That's it. Now, you are ready to go.
 
-## Screenshots:
-![](/images/share_file_with_text_1.jpg?raw=true "share file with text 1")
-![](/images/share_file_with_text_2.jpg?raw=true "share file with text 2")
-![](/images/share_file_with_text_3.jpg?raw=true "share file with text 3")
-![](/images/share_text_1.jpg?raw=true "share text 1")
-![](/images/share_text_2.jpg?raw=true "share text 2")
+That's it. Now, you are ready to go.
 
 
 ## Usage Examples:
@@ -74,3 +69,17 @@ String text = "Transaction Screenshot";
 FlutterShare.shareFileWithText(
     textContent: text, bytes: bytes);
 ```
+
+
+## Screenshots:
+
+### Share text only
+![](/images/share_text_1.jpg?raw=true "share text 1")
+![](/images/share_text_2.jpg?raw=true "share text 2")
+
+
+### Share a file with text
+![](/images/share_file_with_text_1.jpg?raw=true "share file with text 1")
+![](/images/share_file_with_text_2.jpg?raw=true "share file with text 2")
+![](/images/share_file_with_text_3.jpg?raw=true "share file with text 3")
+
