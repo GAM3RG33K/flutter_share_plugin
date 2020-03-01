@@ -41,9 +41,7 @@ public class FlutterSharePlugin implements MethodCallHandler {
     @Override
     public void onMethodCall(MethodCall call, Result result) {
 
-        if (call.method.equals("getPlatformVersion")) {
-            result.success("Android " + android.os.Build.VERSION.RELEASE);
-        } else if (call.method.equals("share")) {
+       if (call.method.equals("share")) {
             share(call, result);
         } else {
             result.notImplemented();

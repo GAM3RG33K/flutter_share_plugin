@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -55,8 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: EdgeInsets.all(5.0),
                 ),
                 RaisedButton(
-                  onPressed: () =>
-                      shareFile(selectedFileName, selectedFilePath),
+                  onPressed: () {
+                    // share it using file path
+//                    await shareFileUsingPath(selectedFileName, selectedFilePath);
+                    // share it using bytes of the file
+                    getFileBytes(selectedFilePath).then((bytes) async {
+                      await shareFileUsingBytes(selectedFileName, bytes);
+                    });
+                  },
                   child: Text('Share file'),
                 )
               ],
@@ -76,13 +83,16 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void shareFile(String fileName, String filePath) {
-    getFileBytes(filePath).then((bytes) async {
-      var text = "sharing file: $fileName";
-      NotificationHelper.showToast(text, false);
-      await FlutterShare.shareFileWithText(
-          textContent: text, filePath: filePath);
-    });
+  Future<void> shareFileUsingPath(String fileName, String filePath) async {
+    var text = "sharing file: $fileName";
+    NotificationHelper.showToast(text, false);
+    await FlutterShare.shareFileWithText(textContent: text, filePath: filePath);
+  }
+
+  Future<void> shareFileUsingBytes(String fileName, Uint8List bytes) async {
+    var text = "sharing file: $fileName";
+    NotificationHelper.showToast(text, false);
+    await FlutterShare.shareFileWithText(textContent: text, bytes: bytes);
   }
 
   void showChooser() async {
@@ -120,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
           this.selectedFileName = getFileNameFromPath(filePath);
           this.selectedFilePath = filePath;
         });
-        FlutterShare.shareFile(filePath);
+        FlutterShare.shareFile(filePath: filePath);
       });
     };
     PermissionManager.performTaskWithPermission(AppPermission.Storage, task);
@@ -135,7 +145,7 @@ Future<String> getFileFromChooser() async {
   return filePath;
 }
 
-Future<List<int>> getFileBytes(String filePath) async {
+Future<Uint8List> getFileBytes(String filePath) async {
   var file = File.fromUri(Uri.parse(filePath));
   var fileBytes = await file.readAsBytes();
   return fileBytes;

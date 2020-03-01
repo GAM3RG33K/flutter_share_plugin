@@ -1,42 +1,46 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
 /// This is the entry class for the plugin.
 ///
-/// This is a utility class, so all the methods here are static only.
-/// All the dependencies are passed as the parameters in the.
+/// It is a utility class, so all the methods here are static only.
+///
+/// This class performs following utility functions:
+///  - [shareText] : allows sharing text content to other apps
+///  - [shareFile] : allows sharing any files to other apps
+///  - [shareFileWithText] : allows sharing any files with text of choice
+///
+///
+/// Some notes to keep in mind while using these functions:
+///  - while sharing text content, make sure that it is not [null] at any given time
+///  - you can share file content in two ways:
+///     1. by providing the files as bytes([Uint8List] form)
+///         - make sure that the bytes are not null and can be used to recreate
+///           the file, that file will be created in a temp directory.
+///
+///     2. by providing the string URI for fetching the file while sharing
+///        - make sure that the URI is not empty & allows read access to the file
+///        If the URI of the file needs storage access permissions, please add required
+///        permission to android and iOS project respectively.
+///             - to make this simple, use [file_picker] plugin and provide the
+///               path result from the chooser as the URI for file.
+///     3. While sharing the file, filePath will be given priority. [bytes] will
+///         be used only if the filePath is not provided.
+///
 ///
 /// Refer to : https://codinglatte.com/posts/flutter/handling-requesting-for-permissions-like-a-pro-in-flutter/
-///
-/// Author: Harshvardhan Joshi <hj2931996@gmail.com>
 class FlutterShare {
   static const MethodChannel _channel = MethodChannel('flutter_share_plugin');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
-  }
-
-  /// This method will call the respective OS's method implementation through method channel
-  /// provided by flutter
-  ///
-  /// All the parameters are kept optional right now, to provide customized method
-  /// implementations.
-  ///
-  /// For Sharing text or link [message] is content is used, while for sharing a file [fileName] and [bytes]
-  /// are used.
-  ///
-  /// Any of the above parameter can be null at any time.
-  /// NOTE: this plugin can only provide functionality upto showing share UI
-  /// Anything after Showing the UI is upto the respective OS to handle.
-  static Future<bool> share({String message = "", String filePath}) async {
+  static Future<bool> _share({String message = "", String filePath}) async {
     assert(
     message != null && message.isNotEmpty ||
         (filePath != null && filePath.isNotEmpty),
-    'FlutterShare: share(textContent, fileName, bytes) method requires at least one Non-empty parameter.');
+    'FlutterShare: while sharing provide at least one Non-empty parameter, a text or a file .');
 
     final String response =
     await _channel.invokeMethod<String>('share', <String, dynamic>{
@@ -47,16 +51,47 @@ class FlutterShare {
     return true;
   }
 
-  /// Method implementation for sharing file with a [textContent], file is accessed via [filePath] given as
-  /// parameter
+  /// Sharing file with a custom text:
   ///
-  ///Under the hood this method uses
-  ///```dart
-  ///share(textContent, fileName, bytes);
-  ///```
+  /// In this method custom text is represented by [textContent]
+  /// and
+  /// file is represented by:
+  ///  - the [filePath] URI string
+  ///  - the [bytes] in Uint8List format
+  ///
+  /// While sharing the file, [filePath] will be given priority. [bytes] will
+  /// be used only if the [filePath] is not provided.
+  ///
+  /// you can use this method as following:
+  /// 1.
+  /// ```dart
+  ///
+  ///   // assuming we sharing file using a URI
+  ///
+  ///   // use preferred method here to get URI string of the file
+  ///   String uri = await getAbsoluteFileURI();
+  ///
+  ///   String text = "Take a look at this...";
+  ///   FlutterShare.shareFileWithText(
+  ///       textContent: text, filePath: uri);
+  /// ```
+  ///
+  ///
+  /// 2.
+  /// ```dart
+  ///   // assuming we sharing an in memory file
+  ///   Uint8List bytes = bohemianRhapsodyFile.readAsBytes();
+  ///
+  ///   String text = "Check out this song...";
+  ///   FlutterShare.shareFileWithText(
+  ///       textContent: text, bytes: bytes);
+  /// ```
+  ///
+  /// Check out the code in second example, file path is not provided, since we
+  /// intend to share the file via bytes.
   static Future<bool> shareFileWithText({String textContent,
     String fileName,
-    List<int> bytes,
+    Uint8List bytes,
     String filePath}) async {
     if (textContent == null) {
       textContent = "";
@@ -74,48 +109,51 @@ class FlutterShare {
     }
 
     assert(filePath.isNotEmpty, 'Could Not find file!!');
-    return share(message: textContent, filePath: filePath);
+    return _share(message: textContent, filePath: filePath);
   }
 
-  ///Method implementation for sharing only text,
+  /// Sharing a custom text
   ///
-  ///Under the hood this method uses
-  ///```dart
-  ///shareFileWithText(textContent, filePath);
-  ///```
+  /// Usage Example :
+  /// ```dart
   ///
+  ///   String text = "Check out this plugin: ";
+  ///   FlutterShare.shareText(text);
+  /// ```
+  ///
+  /// Use of this method is equivalent to:
+  /// ```dart
+  ///   shareFileWithText(textContent: textContent, filePath: null);
+  /// ```
   static Future<bool> shareText(String textContent) async {
     return shareFileWithText(textContent: textContent, filePath: null);
   }
 
-  ///Method implementation for sharing only file,
+  /// Sharing a file
   ///
+  /// This method allows 2 ways to share a file
   ///
+  /// Usage Example :
+  /// 1. Using file path
+  /// ```dart
+  ///   String filePath = getAbsoluteFilePath(bohemianRhapsodyFile);
   ///
-  ///Under the hood this method uses
-  ///```dart
-  ///shareFileWithText(textContent, filePath);
-  ///```
+  ///   FlutterShare.shareFileWithText(filePath: filePath);
+  /// ```
   ///
-  static Future<bool> shareFile(String filePath) async {
-    return shareFileWithText(textContent: null, filePath: filePath);
+  /// 2. Using bytes
+  /// ```dart
+  ///   // assuming we sharing an in memory file
+  ///   Uint8List bytes = bohemianRhapsodyFile.readAsBytes();
+  ///
+  ///   FlutterShare.shareFileWithText(bytes: bytes);
+  /// ```
+  ///
+  /// Use of this method is equivalent to:
+  /// ```dart
+  ///   shareFileWithText(filePath: filePath, bytes: bytes);
+  /// ```
+  static Future<bool> shareFile({String filePath, Uint8List bytes}) async {
+    return shareFileWithText(filePath: filePath, bytes: bytes);
   }
-
-//  /// This method will get a file using the given [filePaht].
-//  /// After fetching the files,
-//  ///   then file will be converted to list of byte
-//  ///
-//  /// list of bytes is returned
-//  static Future<List<int>> _getFileBytes(String filePath) async {
-//    var file = File.fromUri(Uri.parse(filePath));
-//    var fileBytes = await file.readAsBytes();
-//    return fileBytes;
-//  }
-//
-//  /// This method will get fileName from the given [filePaht].
-//  /// name of the file is returned.
-//  static String _getFileNameFromPath(String filePath) {
-//    int fileNameStartIndex = filePath.lastIndexOf("/") + 1;
-//    return filePath.substring(fileNameStartIndex, filePath.length);
-//  }
 }

@@ -10,9 +10,7 @@
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-    if ([@"getPlatformVersion" isEqualToString:call.method]) {
-        result([@"iOS " stringByAppendingString:[[UIDevice currentDevice] systemVersion]]);
-    } else if ([@"share" isEqualToString:call.method]) {
+    if ([@"share" isEqualToString:call.method]) {
         // [self share:call];
         
         //get parameters from the call

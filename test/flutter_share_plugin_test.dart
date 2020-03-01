@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_share_plugin/flutter_share_plugin.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -15,7 +14,4 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await FlutterShare.platformVersion, '42');
-  });
 }
