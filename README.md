@@ -18,11 +18,11 @@ import 'package:flutter_share_plugin/flutter_share_plugin.dart';
 That's it. Now, you are ready to go.
 
 ## Screenshots:
-![] (images/share_file_with_text (1).jpg)
-![] (images/share_file_with_text (2).jpg)
-![] (images/share_file_with_text (3).jpg)
-![] (images/share_text (1).jpg)
-![] (images/share_text (2).jpg)
+![] (/images/share_file_with_text(1).jpg?raw=true "share_file_with_text(1)")
+![] (/images/share_file_with_text(2).jpg?raw=true "share_file_with_text(2)")
+![] (/images/share_file_with_text(3).jpg?raw=true "share_file_with_text(3)")
+![] (/images/share_text(1).jpg?raw=true "share_text(1)")
+![] (/images/share_text(2).jpg?raw=true "share_text(2)")
 
 
 ## Usage Examples:
