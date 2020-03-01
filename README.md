@@ -1,6 +1,9 @@
 # flutter_share_plugin
-This plugin helps sharing content like, text, image or a file to other apps.
-It supports both Android and iOS, no additional changes are required in native code or projects (Except ofcourse the Storage Access permissions, you'll need to add that in your project manually).
+Easily share content like text, image or a file to other apps.
+
+Both Android and iOS platforms are supported, no additional changes are required in native code or projects.
+
+*Except, the **Specific permissions** (like Storage Access permission), you'll need to add that in your project manually.*
 
 [![pub package](https://img.shields.io/pub/v/flutter_share_plugin.svg)](https://pub.dev/packages/flutter_share_plugin)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -14,22 +17,60 @@ import 'package:flutter_share_plugin/flutter_share_plugin.dart';
 ```
 That's it. Now, you are ready to go.
 
+## Screenshots:
+![] (images/share_file_with_text (1).jpg)
+![] (images/share_file_with_text (2).jpg)
+![] (images/share_file_with_text (3).jpg)
+![] (images/share_text (1).jpg)
+![] (images/share_text (2).jpg)
+
 
 ## Usage Examples:
 
 ### Share only text:
 ```dart
-FlutterShare.shareText("Text to be shared");
+String text = "Check out this plugin: https://pub.dev/packages/flutter_share_plugin ";
+FlutterShare.shareText(text);
 ```
+
 
 ### Share only file:
+
+#### Example 1:
 ```dart
-String filePath = "../song.mp3";
-FlutterShare.shareFile(filePath);
+String filePath = bohemianRhapsodySong.absolute.path;
+
+// pass the string as `filePath` parameter
+FlutterShare.shareFile(filePath: filePath);
 ```
 
-### Share file and text content:
+#### Example 2:
 ```dart
-String filePath = "../screenshot_123.jpg";
-FlutterShare.shareFileWithText(textContent: "Screenshot attached", filePath: filePath);
+Uint8List bytes = bohemianRhapsodySong.readAsBytes();
+
+// pass the Uint8List data as `bytes` parameter
+FlutterShare.shareFile(bytes: bytes);
+```
+
+
+### Share file and text content:
+
+#### Example 1:
+```dart
+// use preferred method here to get URI string of the file
+String uri = screenshot.absolute.path;
+String text = "Transaction Screenshot";
+
+FlutterShare.shareFileWithText(
+    textContent: text, filePath: uri);
+```
+
+#### Example 2:
+```dart
+// use preferred method here to get bytes of the files
+Uint8List bytes = screenshot.readAsBytes();
+String text = "Transaction Screenshot";
+
+FlutterShare.shareFileWithText(
+    textContent: text, bytes: bytes);
 ```

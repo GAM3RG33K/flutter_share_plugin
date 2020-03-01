@@ -65,11 +65,8 @@ class FlutterShare {
   /// you can use this method as following:
   /// 1.
   /// ```dart
-  ///
-  ///   // assuming we sharing file using a URI
-  ///
   ///   // use preferred method here to get URI string of the file
-  ///   String uri = await getAbsoluteFileURI();
+  ///   String uri = bohemianRhapsodySong.absolute.path;
   ///
   ///   String text = "Take a look at this...";
   ///   FlutterShare.shareFileWithText(
@@ -79,14 +76,15 @@ class FlutterShare {
   ///
   /// 2.
   /// ```dart
-  ///   // assuming we sharing an in memory file
-  ///   Uint8List bytes = bohemianRhapsodyFile.readAsBytes();
+  ///   // use preferred method here to get bytes of the files
+  ///   Uint8List bytes = bohemianRhapsodySong.readAsBytes();
   ///
   ///   String text = "Check out this song...";
   ///   FlutterShare.shareFileWithText(
   ///       textContent: text, bytes: bytes);
   /// ```
   ///
+  /// *Note*:
   /// Check out the code in second example, file path is not provided, since we
   /// intend to share the file via bytes.
   static Future<bool> shareFileWithText({String textContent,
@@ -116,8 +114,7 @@ class FlutterShare {
   ///
   /// Usage Example :
   /// ```dart
-  ///
-  ///   String text = "Check out this plugin: ";
+  ///   String text = "Check out this plugin:https://pub.dev/packages/flutter_share_plugin ";
   ///   FlutterShare.shareText(text);
   /// ```
   static Future<bool> shareText(String textContent) async {
@@ -131,19 +128,23 @@ class FlutterShare {
   /// This method allows 2 ways to share a file
   ///
   /// Usage Example :
+  ///
+  /// Assuming we sharing an in memory file
+  ///  in this case `bohemianRhapsodySong`
   /// 1. Using file path
   /// ```dart
-  ///   String filePath = getAbsoluteFilePath(bohemianRhapsodyFile);
+  ///   String filePath = bohemianRhapsodySong.absolute.path;
   ///
-  ///   FlutterShare.shareFileWithText(filePath: filePath);
+  ///   // pass the string as `filePath` parameter
+  ///   FlutterShare.shareFile(filePath: filePath);
   /// ```
   ///
   /// 2. Using bytes
   /// ```dart
-  ///   // assuming we sharing an in memory file
-  ///   Uint8List bytes = bohemianRhapsodyFile.readAsBytes();
+  ///   Uint8List bytes = bohemianRhapsodySong.readAsBytes();
   ///
-  ///   FlutterShare.shareFileWithText(bytes: bytes);
+  ///   // pass the Uint8List data as `bytes` parameter
+  ///   FlutterShare.shareFile(bytes: bytes);
   /// ```
   ///
   /// Use of this method is equivalent to:
