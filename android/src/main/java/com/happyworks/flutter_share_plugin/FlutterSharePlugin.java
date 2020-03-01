@@ -21,6 +21,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
  * FlutterSharePlugin
  */
 public class FlutterSharePlugin implements MethodCallHandler {
+    private final String FLUTTER_SHARE_TAG = "FlutterShare";
     //    private final static String FILE_PROVIDER_NAME = "FlutterShareFilePathProvider";
     private Registrar mRegistrar;
     private Context mContext;
@@ -41,7 +42,7 @@ public class FlutterSharePlugin implements MethodCallHandler {
     @Override
     public void onMethodCall(MethodCall call, Result result) {
 
-       if (call.method.equals("share")) {
+        if (call.method.equals("share")) {
             share(call, result);
         } else {
             result.notImplemented();
@@ -62,12 +63,12 @@ public class FlutterSharePlugin implements MethodCallHandler {
 
         if (TextUtils.isEmpty(content) && TextUtils.isEmpty(fileUrl)) {
             final String errorMessage = "Error: Found empty parameters!! At least one Non-empty content id required.";
-            Log.e("FlutterShare", errorMessage);
+            Log.e(FLUTTER_SHARE_TAG, errorMessage);
             result.error(errorMessage, null, null);
             return;
         }
 
-        Log.d("FlutterSharePlugin", "Sharing textContent / fileUrl --> " + content + " / " + fileUrl);
+        Log.d(FLUTTER_SHARE_TAG, "Sharing textContent / fileUrl --> " + content + " / " + fileUrl);
         try {
 
             // create intent to share something to other apps
@@ -93,7 +94,7 @@ public class FlutterSharePlugin implements MethodCallHandler {
             resultStatus = true;
 
         } catch (final Exception ex) {
-            Log.e("FlutterShare", "Error: while sharing the contents:", ex);
+            Log.e(FLUTTER_SHARE_TAG, "Error: while sharing the contents:", ex);
             result.error("Error: while sharing the contents:", ex.getLocalizedMessage(), null);
         }
         result.success("share successful: " + resultStatus);
@@ -117,21 +118,26 @@ public class FlutterSharePlugin implements MethodCallHandler {
     /**
      * This method will add extras flag related to a file which will be shared
      *
-     * @param intent  source intent through which the file will be shared
-     * @param fileUrl path of the file
+     * @param intent   source intent through which the file will be shared
+     * @param filePath path of the file
      */
-    private void addFileExtrasInIntent(final Intent intent, final String fileUrl) {
-        if (!TextUtils.isEmpty(fileUrl)) {
-            // Uri fileUri = getFileUri(fileName);
-            final Uri fileUri = Uri.parse(fileUrl);
-            Log.i("FlutterShare", "file uri--> " + fileUri);
+    private void addFileExtrasInIntent(final Intent intent, final String filePath) {
+        Log.d(FLUTTER_SHARE_TAG, "addFileExtrasInIntent: file path--> " + filePath);
+        if (!TextUtils.isEmpty(filePath)) {
+            Uri fileUri = getFileUri(filePath);
+//            final Uri fileUri = Uri.parse(filePath);
+
+            final File file = new File(filePath);
+
+            Log.d(FLUTTER_SHARE_TAG, "file --> " + file);
+            Log.d(FLUTTER_SHARE_TAG, "file size --> " + file.length());
 
             intent.putExtra(Intent.EXTRA_STREAM, fileUri);
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
             // set share type as mime type of the file
             String mimeType = getMimeType(fileUri);
-            Log.i("FlutterShare", "mimeType--> " + mimeType);
+            Log.d(FLUTTER_SHARE_TAG, "mimeType--> " + mimeType);
             intent.setType(mimeType);
         }
     }
@@ -150,10 +156,22 @@ public class FlutterSharePlugin implements MethodCallHandler {
         }
     }
 
-    private Uri getFileUri(final String fileName) {
-        // fetch file from cache storage
-        final File file = new File(mContext.getCacheDir(), fileName);
-        Log.i("FlutterShare", "getFileUri: file size:" + file.length());
+    /**
+     * This method is necessary to get a publicly accessible URI for the file
+     * <p>
+     * For the public URI following steps are done:
+     * 1. create a file from the file path
+     * 2. get the file's URI using the FileProvider API
+     * <p>
+     * URI given by the FileProvider is public and can be used to share the file with.
+     *
+     * @param filePath string form of absolute path of the file to be shared
+     */
+    private Uri getFileUri(final String filePath) {
+
+        // create file from from the file path
+        final File file = new File(filePath);
+        Log.d(FLUTTER_SHARE_TAG, "getFileUri: file name:" + file.getName());
 
         // get URI from the file
         Uri uriForFile;
@@ -161,13 +179,13 @@ public class FlutterSharePlugin implements MethodCallHandler {
             // get URI using file provider
             uriForFile = FileProvider.getUriForFile(mContext, mContext.getPackageName(), file);
         } catch (final Exception e) {
-
-            Log.e("FlutterShare", "getFileUri: exception while fetching URI using path provider", e);
+            Log.e(FLUTTER_SHARE_TAG, "getFileUri: exception while fetching URI using path provider", e);
             // get URI using basic URI parse from the file itself
             uriForFile = Uri.parse(file.getAbsolutePath());
         }
         return uriForFile;
     }
+
 
     /**
      * Contents MIME type, this mime type will be used by android OS and other apps

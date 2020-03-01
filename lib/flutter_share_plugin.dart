@@ -108,7 +108,7 @@ class FlutterShare {
       await file.writeAsBytes(bytes);
     }
 
-    assert(filePath.isNotEmpty, 'Could Not find file!!');
+    assert(filePath != null && filePath.isNotEmpty, 'Could Not find file!!');
     return _share(message: textContent, filePath: filePath);
   }
 
@@ -120,13 +120,10 @@ class FlutterShare {
   ///   String text = "Check out this plugin: ";
   ///   FlutterShare.shareText(text);
   /// ```
-  ///
-  /// Use of this method is equivalent to:
-  /// ```dart
-  ///   shareFileWithText(textContent: textContent, filePath: null);
-  /// ```
   static Future<bool> shareText(String textContent) async {
-    return shareFileWithText(textContent: textContent, filePath: null);
+    bool status =
+    await _share(message: textContent);
+    return status;
   }
 
   /// Sharing a file
@@ -154,6 +151,7 @@ class FlutterShare {
   ///   shareFileWithText(filePath: filePath, bytes: bytes);
   /// ```
   static Future<bool> shareFile({String filePath, Uint8List bytes}) async {
-    return shareFileWithText(filePath: filePath, bytes: bytes);
+    bool status = await shareFileWithText(filePath: filePath, bytes: bytes);
+    return status;
   }
 }

@@ -29,9 +29,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String selectedFileName = 'None';
-  String selectedFilePath = 'Unknown';
+  String recentFileName = 'None';
+  String recentFilePath;
+  Uint8List recentFileBytes;
   final textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,40 +48,22 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text("file: $selectedFileName"),
-            Text("path: $selectedFilePath"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                RaisedButton(
-                  onPressed: () => showChooser(),
-                  child: Text('Choose file'),
-                ),
-                Container(
-                  padding: EdgeInsets.all(5.0),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    // share it using file path
-//                    await shareFileUsingPath(selectedFileName, selectedFilePath);
-                    // share it using bytes of the file
-                    getFileBytes(selectedFilePath).then((bytes) async {
-                      await shareFileUsingBytes(selectedFileName, bytes);
-                    });
-                  },
-                  child: Text('Share file'),
-                )
-              ],
+            Text("recent file: $recentFileName"),
+            RaisedButton(
+              onPressed: () => chooseFile(),
+              child: Text('Choose file'),
+            ),
+            TextField(
+              autofocus: true,
+              controller: textController,
             ),
             RaisedButton(
-              onPressed: () => chooseAndShare(),
-              child: Text('Choose & Share file'),
-            ),
-            TextField(autofocus: true, controller: textController),
-            RaisedButton(
-              onPressed: () => shareText(textController.text),
-              child: Text('Share text'),
+              onPressed: () =>
+                  share(textController.text, recentFileName, recentFilePath,
+                      recentFileBytes),
+              child: Text('Share'),
             )
           ],
         ),
@@ -83,37 +71,36 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future<void> shareFileUsingPath(String fileName, String filePath) async {
-    var text = "sharing file: $fileName";
+  Future<void> shareFileUsingPath(String text, String fileName,
+      String filePath) async {
     NotificationHelper.showToast(text, false);
-    await FlutterShare.shareFileWithText(textContent: text, filePath: filePath);
+    await FlutterShare.shareFileWithText(
+        textContent: text, fileName: fileName, filePath: filePath);
   }
 
-  Future<void> shareFileUsingBytes(String fileName, Uint8List bytes) async {
-    var text = "sharing file: $fileName";
+  Future<void> shareFileUsingBytes(String text, String fileName,
+      Uint8List bytes) async {
     NotificationHelper.showToast(text, false);
-    await FlutterShare.shareFileWithText(textContent: text, bytes: bytes);
+    await FlutterShare.shareFileWithText(
+        textContent: text, fileName: fileName, bytes: bytes);
   }
 
-  void showChooser() async {
-    var task = () {
-      getFileFromChooser().then((filePath) {
-        setState(() {
-          this.selectedFileName = getFileNameFromPath(filePath);
-          this.selectedFilePath = filePath;
-        });
+  void share(String text, String selectedFileName, String selectedFilePath,
+      Uint8List recentFileBytes) {
+    if (selectedFilePath == null || selectedFilePath.isEmpty) {
+      FlutterShare.shareText(text);
+    } else {
+      print('\n text: $text');
+      print('\n file: $selectedFilePath \n & \n bytes: $recentFileBytes');
+
+//     share it using file path
+//    shareFileUsingPath(textData, selectedFileName, selectedFilePath);
+
+      shareFileUsingBytes(text, selectedFileName, recentFileBytes)
+          .then((value) {
+        NotificationHelper.showToast(text, false);
       });
-    };
-    PermissionManager.performTaskWithPermission(AppPermission.Storage, task);
-  }
-
-  void shareText(String text) {
-    var textContent = "sharing text: $text";
-
-    FlutterShare.shareText(text).then((text) {
-      //DO something here if needed.
-      NotificationHelper.showToast(textContent, false);
-    });
+    }
   }
 
   @override
@@ -123,14 +110,20 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void chooseAndShare() {
+  void chooseFile() {
     var task = () {
       getFileFromChooser().then((filePath) {
-        setState(() {
-          this.selectedFileName = getFileNameFromPath(filePath);
-          this.selectedFilePath = filePath;
+        // share it using file path
+//        shareFileUsingPath(text, filePath);
+        // share it using bytes of the file
+        getFileBytes(filePath).then((bytes) async {
+          var fileNameFromPath = getFileNameFromPath(filePath);
+          setState(() {
+            this.recentFileName = fileNameFromPath;
+            this.recentFilePath = filePath;
+            this.recentFileBytes = bytes;
+          });
         });
-        FlutterShare.shareFile(filePath: filePath);
       });
     };
     PermissionManager.performTaskWithPermission(AppPermission.Storage, task);
