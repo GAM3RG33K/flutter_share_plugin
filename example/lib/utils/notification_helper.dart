@@ -30,10 +30,10 @@ class NotificationHelper {
   ///
   static void showToast(String message, bool isLongToast,
       {ToastGravity gravity,
-      int timeInSecIos,
-      Color backgroundColor,
-      Color textColor,
-      double fontSize}) {
+        int timeInSecIos,
+        Color backgroundColor,
+        Color textColor,
+        double fontSize}) {
     //show a toast with given message and customizations
     Fluttertoast.showToast(
         msg: message,

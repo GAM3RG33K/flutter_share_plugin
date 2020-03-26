@@ -61,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             RaisedButton(
               onPressed: () =>
-                  share(textController.text, recentFileName, recentFilePath,
-                      recentFileBytes),
+                  share(textController.text, recentFileName,
+                      recentFilePath, recentFileBytes),
               child: Text('Share'),
             )
           ],

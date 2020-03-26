@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 
-/// This is the entry class for the plugin.
+/// This is the entry for the plugin.
 ///
 /// It is a utility class, so all the methods here are static only.
 ///
@@ -118,8 +118,7 @@ class FlutterShare {
   ///   FlutterShare.shareText(text);
   /// ```
   static Future<bool> shareText(String textContent) async {
-    bool status =
-    await _share(message: textContent);
+    bool status = await _share(message: textContent);
     return status;
   }
 
