@@ -1,3 +1,8 @@
+## 0.1.3+2
+* Resolved File share bug caused by URI changes in android native code
+* Changed internal method structure to allow some additional optional parameters
+* Added more documentation for reference
+
 ## 0.1.3+1
 * iOS file share bug-fix
 * improved example app
