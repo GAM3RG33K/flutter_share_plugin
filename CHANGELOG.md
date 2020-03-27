@@ -1,3 +1,6 @@
+## 0.1.3+3
+* Fixed broken Image links
+
 ## 0.1.3+2
 * Resolved File share bug caused by URI changes in android native code
 * Changed internal method structure to allow some additional optional parameters

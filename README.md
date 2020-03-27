@@ -74,12 +74,12 @@ FlutterShare.shareFileWithText(
 ## Screenshots:
 
 ### Share text only
-![](/images/share_text_1.jpg?raw=true "share text 1")
-![](/images/share_text_2.jpg?raw=true "share text 2")
+![](https://github.com/GAM3RG33K/flutter_share_plugin/blob/master/images/share_text_1.jpg?raw=true "share text 1")
+![](https://github.com/GAM3RG33K/flutter_share_plugin/blob/master/images/share_text_2.jpg?raw=true "share text 2")
 
 
 ### Share a file with text
-![](/images/share_file_with_text_1.jpg?raw=true "share file with text 1")
-![](/images/share_file_with_text_2.jpg?raw=true "share file with text 2")
-![](/images/share_file_with_text_3.jpg?raw=true "share file with text 3")
+![](https://github.com/GAM3RG33K/flutter_share_plugin/blob/master/images/share_file_with_text_1.jpg?raw=true "share file with text 1")
+![](https://github.com/GAM3RG33K/flutter_share_plugin/blob/master/images/share_file_with_text_2.jpg?raw=true "share file with text 2")
+![](https://github.com/GAM3RG33K/flutter_share_plugin/blob/master/images/share_file_with_text_3.jpg?raw=true "share file with text 3")
 
