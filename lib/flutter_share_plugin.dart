@@ -37,7 +37,9 @@ class FlutterShare {
   static const MethodChannel _channel = MethodChannel('flutter_share_plugin');
 
   static Future<bool> _share({String message = "", String filePath}) async {
-      filePath = filePath.absolute.path.replaceAll(" ","_");   // if file contains white spaces then it won't share file
+  //    filePath = filePath.absolute.path.replaceAll(" ","_");   // if file contains white spaces then it won't share file
+    filePath.split("/").last.replaceAll(" ", "_"); // it will give file name without spaces...
+    
     assert(
     message != null && message.isNotEmpty ||
         (filePath != null && filePath.isNotEmpty),
